@@ -8,4 +8,4 @@ El sistema permite registrar eventos, asignarles salas y planificar actividades 
 
 # Ejecución
 1. Clonar el repositorio mediante HTTPS:
-   git clone [https://github.com/](https://github.com/)AnnuarE/PP_TP1_53285.git
+   git clone [[https://github.com/](https://github.com/)AnnuarE/PP_TP1_53285.git](https://github.com/AnnuarE/PP_TP1_53285)
