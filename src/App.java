@@ -1,65 +1,117 @@
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
+/**
+ * Clase principal desde la cual se crean y vinculan los objetos del modelo.
+ * En este ejercicio se observa herencia y polimorfismo: el evento contiene Actividad,
+ * pero en tiempo de ejecución se almacenan objetos Charla y Taller.
+ */
 public class App {
     public static void main(String[] args) {
-        // Crear evento con "new" y los datos
-        EventoUniversitario evento1 = new EventoUniversitario("001", "Yoga para ingenieros", 5000.0, false);
-        EventoUniversitario evento2 = new EventoUniversitario("002", "Clase loca de Sistemas Operativos", 0.0, true);
+        Scanner scanner = new Scanner(System.in);
+        boolean continuar=true;
+        int id=1;
 
-        //Crear Salas:
-        Sala salaGrande = new Sala(1, "Sala Grande");
-        Sala salaChica = new Sala(2, "Sala Chica");
+        /* Se crean estudiantes } */
+        List<Estudiante> estudiantes = new ArrayList<>();
 
-        //Asignarle salas a los eventos de arriba:
-        evento1.asignarSala(salaGrande);
-        evento2.asignarSala(salaChica);
+        System.out.println("REGISTRO DE ESTUDIANTES: ");
+        System.out.println("======================");
 
-        // Crear copia con "new"
-        EventoUniversitario copiaEvento1 = new EventoUniversitario(evento1);
-        EventoUniversitario copiaEvento2 = new EventoUniversitario(evento2);
+        while (continuar){
+            System.out.println("Ingese legajo del estudiante: ");
+            String legajo = scanner.nextLine();
+            System.out.println("Ingese nombre y apellido del estudiante: ");
+            String apenomb = scanner.nextLine();
+            estudiantes.add(new Estudiante(legajo, apenomb));
+            System.out.println("desea crear otro estudiante  S/N?");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+            continuar = (respuesta.equals("s") || respuesta.equals("si") || respuesta.equals("sí")) ? true : false;
+        };
 
-        //Lista estudiantes:
-        List<Estudiante> listaEstudiante = new ArrayList<>();
-        listaEstudiante.add(new Estudiante("52359", "Ana Conda"));
-        listaEstudiante.add(new Estudiante("33633", "Mica Rozo"));
-        listaEstudiante.add(new Estudiante("87531", "Marcela Laloca")); //Marcela una copada, muak
+        /* Se itera construyendo eventos */
+        System.out.println("\n\nREGISTRO DE EVENTOS: ");
+        System.out.println("====================");
+        continuar=true;
+        while(continuar) {
+            /* Se requieren datos por consola para construir un evento */
+            System.out.println("Ingese un titulo para el evento: ");
+            String titulo = scanner.nextLine();
+            System.out.println("Ingese el costo base:  ");
+            double costoBase = scanner.nextDouble();
+            scanner.nextLine(); //limpia el Enter pendiente
+            System.out.println("El evento tendra costo para los participantes s/n?");
+            String respuesta = scanner.nextLine().trim().toLowerCase();
+            boolean esGratuito= false;
+            if (respuesta.equals("s") || respuesta.equals("si") || respuesta.equals("sí")) {
+                esGratuito= true;
+            }
 
-        //crear actividades para los eventos:
-        evento1.crearActividad(10, "Charla introductoria a Paradigmas",50, "Charla");
-        evento1.crearActividad(21, "Clase de baile escoces",20, "Taller");
+            /* Se construye un objeto del tipo EventoUniversitario con el constructor de inicializacion de parametros */
+            EventoUniversitario evento = new EventoUniversitario(
+                    "EVT-" + id,
+                    titulo,
+                    costoBase,
+                    esGratuito
+            );
 
-        evento2.crearActividad(33, "Taller de origamis",120, "Taller");
+            /* Se crea una sala y se asigna al evento */
+            System.out.println("Ingese el nombre de la sala donde se realizará el evento: ");
+            String nombreSala= scanner.nextLine();
+            Sala sala = new Sala(id, nombreSala);
+            evento.asignarSala(sala);
 
+            /* Se crean las actividades del evento */
+            System.out.println("\n\nREGISTRO DE ACTIVIDADES PARA EL EVENTO " + evento.getTitulo());
+            System.out.println("================================================================");
+            int idActividad=1;
+            while (continuar){
+                System.out.println("Ingese el título de la actividad: ");
+                String tituloActividad= scanner.nextLine();
+                System.out.println("Ingese el cupo máximo de estudiantes admitidos para la actividad: ");
+                int cupo= scanner.nextInt();
+                scanner.nextLine(); //Se consume la linea.
+                System.out.println("La actividad es una Charla o un Taller?  (Charla/Taller)? ");
+                String tipo= scanner.nextLine().trim().toLowerCase();
+                evento.crearActividad(idActividad, tituloActividad, cupo, tipo);
+                System.out.println("Desea crear otra actividad para el  evento " + evento.getTitulo() + " S/N?");
+                respuesta = scanner.nextLine().trim().toLowerCase();
+                continuar  = (respuesta.equals("s") || respuesta.equals("si") || respuesta.equals("sí")) ? true : false;
+                ++idActividad;
+            }
 
-        //Obtener esas actividades
-        Actividad charlaParadigmas = evento1.getActividad().get(0);
-        Actividad claseBaile = evento1.getActividad().get(1);
+            /* Se inscriben estudiantes en actividades */
+            System.out.println("\n\nINSCRIPCION DE ESTUDIANTES EN ACTIVIDADES " + evento.getTitulo());
+            System.out.println("===============================================================================");
+            continuar=true;
+            while (continuar){
+                System.out.println("Ingese el legajo del estudiante a inscribir: ");
+                String legajo = scanner.nextLine();
+                System.out.println("Ingese id de la Actividad: (1, 2, 3, etc)");
+                idActividad = scanner.nextInt();
+                scanner.nextLine(); // se consume linea
+                for (Estudiante estudiante: estudiantes){
+                    if (estudiante.getLegajo().equals(legajo)){
+                        evento.getActividad().get(--idActividad).inscribir(estudiante);
+                    }
+                }
+                System.out.println("Desea generar otra inscripción  S/N?");
+                respuesta = scanner.nextLine().trim().toLowerCase();
+                continuar  = (respuesta.equals("s") || respuesta.equals("si") || respuesta.equals("sí")) ? true : false;
+            }
 
-        Actividad tallerOrigami = evento2.getActividad().get(0);
+            /* Se muestran datos del evento */
+            System.out.println("\n\n DATOS DEL EVENTO");
+            evento.mostrarDatos();
 
-        //Inscribir estudiantes:
-        charlaParadigmas.inscribir(listaEstudiante.get(0)); //0 es al primero que pusimos, o sea Ana
-        charlaParadigmas.inscribir(listaEstudiante.get(1)); //Mica
+            /* Se consulta si se desea continuar creando eventos*/
+            System.out.println("\n\nDesea crear otro evento  S/N?");
+            respuesta = scanner.nextLine().trim().toLowerCase();
+            continuar  = (respuesta.equals("s") || respuesta.equals("si") || respuesta.equals("sí")) ? true : false;
+        } ;
 
-        claseBaile.inscribir(listaEstudiante.get(2)); //Marcela
-        claseBaile.inscribir(listaEstudiante.get(0)); //Ana
-
-
-        // Con esto muestro los datos de los eventos:
-        System.out.println("--+--+--+--+--+--+--+--+--+--- EVENTOS ---+--+--+--+--+--+--+--+--+--");
-        //aestetik, rawwwr
-        evento1.mostrarDatos();
-        evento2.mostrarDatos();
-
-
-        // Y con esto los datos de sus copias
-       // System.out.println("\n--- COPIAS ---");
-       // copiaEvento1.mostrarDatos();
-       // copiaEvento2.mostrarDatos();
-        // Saqué las copias porque se ven feas y no sirven para un poto
-
-        // Mostrar contador
-        System.out.println("\nTotal de eventos creados: " + EventoUniversitario.getCantidadEventos());
+        /* Se muestra la cantidad total de eventos creados */;
+        System.out.println("\n\nTOTAL DE EVENTOS CREADOS: " + EventoUniversitario.getCantidadEventos());
     }
 }

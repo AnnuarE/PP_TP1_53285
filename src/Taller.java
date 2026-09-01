@@ -1,8 +1,8 @@
 public class Taller extends Actividad {
     private boolean requiereNotebook; //Para anotar si necesita o no
 
-    public Taller(int id, String titulo, int cupoMinimo, int cupoMaximo, boolean requiereNotebook){
-        super(id, titulo, cupoMinimo, cupoMaximo); //super: llamar al constructor padre
+    public Taller(int id, String titulo, boolean requiereNotebook, int cupoMaximo){
+        super(id, titulo, cupoMaximo); //super: llamar al constructor padre
         this.requiereNotebook = requiereNotebook;
     }
 
