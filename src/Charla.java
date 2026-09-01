@@ -2,8 +2,8 @@ public class Charla extends Actividad {
     private String disertante;
 
 
-    public Charla (int id, String titulo, int cupoMaximo, int cupoMinimo, String disertante){
-        super(id,titulo,cupoMaximo, cupoMinimo); // Llamo al constructor de la clase padre (Actividad)
+    public Charla (int id, String titulo, String disertante, int cupo){
+        super(id,titulo,cupo); // Llamo al constructor de la clase padre (Actividad)
         this.disertante = disertante;
     }
 

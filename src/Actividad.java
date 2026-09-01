@@ -4,7 +4,7 @@ import java.util.List;
 public abstract class Actividad {
     protected int id;
     protected  String titulo;
-    protected  int cupoMaximo;
+    protected  int cupo;
     public final static int CUPO_MINIMO = 33;
 
     //Lista que pide el enunciado:
@@ -12,16 +12,16 @@ public abstract class Actividad {
 
 
     //constructor:
-    public Actividad(int id, String titulo, int cupoMaximo, int CUPO_MINIMO){
+    public Actividad(int id, String titulo, int cupo){
         this.id = id;
-        this.cupoMaximo = cupoMaximo;
+        this.cupo = cupo;
         this.titulo = titulo;
 
         this.inscripciones = new ArrayList<>(); //iniciar lista vacía llamada "inscripciones"
     }
 
     public Inscripcion inscribir (Estudiante estudiante){ // en realidad no es void sino del tipo "Inscripcion"
-        if (this.inscripciones.size() < cupoMaximo){
+        if (this.inscripciones.size() < cupo){
             Inscripcion nuevaInscripcion = new Inscripcion("Inscripto", estudiante); //parametros que piden en "Inscripcion"
             this.inscripciones.add(nuevaInscripcion);//agrego a la lista la nueva inscripción
             return nuevaInscripcion;
@@ -39,9 +39,9 @@ public abstract class Actividad {
         }
         for (Inscripcion inscripcion1 : inscripciones){
             System.out.println("----Alumno: " + inscripcion1.getEstudiante().getNombre() +
-                                " (" + inscripcion1.getEstudiante().getLegajo() + ") " +
-                                "\n | Fecha: " + inscripcion1.getFecha() +
-                                "\n | Estado: " + inscripcion1.getEstado());
+                    " (" + inscripcion1.getEstudiante().getLegajo() + ") " +
+                    "\n | Fecha: " + inscripcion1.getFecha() +
+                    "\n | Estado: " + inscripcion1.getEstado());
         }
     }
 
@@ -57,6 +57,6 @@ public abstract class Actividad {
     public abstract double calcularCostoMateriales();
 
     public abstract String getTipo();  //podria poner esto arriba junto con los otros
-                                        // pero para tenerlo más ordenado lo dejo acá
+    // pero para tenerlo más ordenado lo dejo acá
 }
 
